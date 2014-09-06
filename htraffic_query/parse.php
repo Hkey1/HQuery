@@ -97,11 +97,11 @@
 				return $str[$i];
 		}
 		static function dropMinusAndVskl($str){
-			return str_replace(['!','+'],['',''],$str);
+			return str_replace(Array('!','+'),Array('',''),$str);
 		}
 		static function dropSyntax($str){
 			static $cache=Array();
-			$str=str_replace(['¸','¨'],['å','Å'],$str);
+			$str=str_replace(Array('¸','¨'),Array('å','Å'),$str);
 			if(isset($cache[$str]))
 				return $cache[$str];
 				
@@ -211,7 +211,7 @@
 				if(!isset(hq::$stopWords[$cur])){
 					$cur=hq::dropPlus($cur);
 					if($cur!=='')
-						$words[]=[hq::morf($cur),'!'.hq::dropSyntax($cur)];
+						$words[]=Array(hq::morf($cur),'!'.hq::dropSyntax($cur));
 				}
 			}
 			$cache[$str]=$words;
