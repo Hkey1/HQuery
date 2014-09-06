@@ -1,25 +1,25 @@
 <?php
 	//Version 0.1
 
-	//Функция для калбека	
+	//Р¤СѓРЅРєС†РёСЏ РґР»СЏ РєР°Р»Р±РµРєР°	
 	function HQ_modifyBuffer($str){
 		HQ::modifyBuffer($str);
 	}
-	//Проверка наличия MB
+	//РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ MB
 	if(!function_exists('mb_convert_encoding'))
 		die('Nead PHP extension MB');
-	//Проверка версии PHP
+	//РџСЂРѕРІРµСЂРєР° РІРµСЂСЃРёРё PHP
 	if(!function_exists('mb_strtoupper'))
 		die('PHP version must be > 4.3');
 
 	include_once(dirname(__FILE__).'/parse.php');
 	class HQ_PROTO extends HQ_PARSE {
 		static function init(){
-			//автоопределение mb_overload
+			//Р°РІС‚РѕРѕРїСЂРµРґРµР»РµРЅРёРµ mb_overload
 			if(hq::$mb_overload===null)
 				hq::$mb_overload==!!ini_get('mbstring.func_overload');
 		
-			//Парcим текущий запрос 
+			//РџР°СЂcРёРј С‚РµРєСѓС‰РёР№ Р·Р°РїСЂРѕСЃ 
 			$q=false;
 			if(hq::$_queryOnce===null){
 				$q=hq::findQueryOnce();
@@ -28,48 +28,48 @@
 					setcookie('hq_query', $q, time()+60*60*24*hq::$cookieDays,'/');
 				}
 			}
-			//Грузим запрос из кук
+			//Р“СЂСѓР·РёРј Р·Р°РїСЂРѕСЃ РёР· РєСѓРє
 			if(hq::$_query===null){
 				if(!$q)
-					$q=hq::findQuery();//Смотрим в куках
+					$q=hq::findQuery();//РЎРјРѕС‚СЂРёРј РІ РєСѓРєР°С…
 				if($q)
 					hq::setQuery($q);
 			}
-			//редиректы
+			//СЂРµРґРёСЂРµРєС‚С‹
 			hq::redirectOnce(hq::$redirects);
 			hq::defineGetParamAnyRef(hq::$setDefaultGetParams);
 			
-			//буферизация вывода
+			//Р±СѓС„РµСЂРёР·Р°С†РёСЏ РІС‹РІРѕРґР°
 			if(hq::$ob)
 				ob_start('HQ_modifyBuffer');
 		}
-		//Закрытие беферизации вывода
+		//Р—Р°РєСЂС‹С‚РёРµ Р±РµС„РµСЂРёР·Р°С†РёРё РІС‹РІРѕРґР°
 		static function ob_end(){
 			$content=ob_get_contents(); 
 			ob_clean();
 			$content=hq::modifyBuffer($content);
 			echo $content;
 		}
-		//Обработка буферизации вывода
+		//РћР±СЂР°Р±РѕС‚РєР° Р±СѓС„РµСЂРёР·Р°С†РёРё РІС‹РІРѕРґР°
 		static function modifyBuffer($str){
-			//Обрабатываем замены
+			//РћР±СЂР°Р±Р°С‚С‹РІР°РµРј Р·Р°РјРµРЅС‹
 			$str=hq::replace($str,hq::$replaces);
 			
-			//Обрабатываем вставки
+			//РћР±СЂР°Р±Р°С‚С‹РІР°РµРј РІСЃС‚Р°РІРєРё
 			$arr=explode('<hqout>',$str);
-			for($i=1;i<count($arr);$i++){//для кажого места
-				$cur=explode('</hqout>',$str,2);//Находим окончание
+			for($i=1;i<count($arr);$i++){//РґР»СЏ РєР°Р¶РѕРіРѕ РјРµСЃС‚Р°
+				$cur=explode('</hqout>',$str,2);//РќР°С…РѕРґРёРј РѕРєРѕРЅС‡Р°РЅРёРµ
 				$end=$cur[1];
 				$cur=explode('\n',$str);
 				$res=Array();
-				foreach($cur as $str){//Парсим условия
+				foreach($cur as $str){//РџР°СЂСЃРёРј СѓСЃР»РѕРІРёСЏ
 					$str=explode('=>',trim($str),2);
 					if(count($str)===1)
 						$res[]=$str[0];
 					else
 						$res[$str[0]]=$str[1];
 				}
-				$res=hq::match($res);//Находим
+				$res=hq::match($res);//РќР°С…РѕРґРёРј
 				if($res || $res===0 || $res==='0')
 					$arr[$i]=$res.$end;
 				else
@@ -78,8 +78,8 @@
 			$str=join('',$arr);
 			return $str; 
 		}
-		//Находим запрос по которому пришел пользователь
-		static function findQueryOnce(){//Парcим текущий запрос 
+		//РќР°С…РѕРґРёРј Р·Р°РїСЂРѕСЃ РїРѕ РєРѕС‚РѕСЂРѕРјСѓ РїСЂРёС€РµР» РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+		static function findQueryOnce(){//РџР°СЂcРёРј С‚РµРєСѓС‰РёР№ Р·Р°РїСЂРѕСЃ 
 			$ref=false;
 			if(isset($_SERVER['HTTP_REFERER'])){
 				$ref=$_SERVER['HTTP_REFERER'];
@@ -98,7 +98,7 @@
 						if(isset($str[1]))
 							$params[$str[0]]=$str[1];
 					}
-					//Яндекс
+					//РЇРЅРґРµРєСЃ
 					$arr=explode('/',$ref);
 					$arr=explode('.',$arr[2]);
 					if(($arr[0]==='yandex'||$arr[0]==='ya') && strpos($ref,'yandsearch') && isset($params['text']) && $params['text'])
@@ -110,7 +110,7 @@
 			foreach(hq::$queryDetect as $str => $encoding){
 				$arr=hq::simpleGen($str);
 				foreach($arr as $str){
-					if(strpos($str,'://')){//из реферера
+					if(strpos($str,'://')){//РёР· СЂРµС„РµСЂРµСЂР°
 						if($ref){
 							$str=explode('?',$str,2);
 							if($base===$str[0] && isset($params[$str[1]]) && $params[$str[1]]){
@@ -121,7 +121,7 @@
 							}
 						}
 					}
-					else if(isset($_GET[$str]) && $_GET[$str]){//из гет параметра
+					else if(isset($_GET[$str]) && $_GET[$str]){//РёР· РіРµС‚ РїР°СЂР°РјРµС‚СЂР°
 						if(hq::isCp1251($encoding))
 							return $_GET[$str];
 						else
@@ -131,13 +131,13 @@
 			}
 		}
 		
-		//Читаем из кук
+		//Р§РёС‚Р°РµРј РёР· РєСѓРє
 		static function findQuery(){
 			if(isset($_COOKIE['hq_query']) && $_COOKIE['hq_query'])
 				return $_COOKIE['hq_query'];
 		}
 
-		//Геттеры и сеттеры Query
+		//Р“РµС‚С‚РµСЂС‹ Рё СЃРµС‚С‚РµСЂС‹ Query
 		static $_query=null;
 		static function setQuery($str){
 			hq::$_query=$str;
@@ -155,7 +155,7 @@
 			return hq::$_queryOnce; 
 		}
 
-		//Тестирование
+		//РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ
 		static $redirectTestMode=false;
 		static function setRedirectTestMode($val){
 			hq::$redirectTestMode=$val;	
@@ -172,7 +172,7 @@
 			hq::$testUri=$str;	
 		}
 		
-		//Сравнивает запросом с ключом 
+		//РЎСЂР°РІРЅРёРІР°РµС‚ Р·Р°РїСЂРѕСЃРѕРј СЃ РєР»СЋС‡РѕРј 
 		static function singleMatch($query,$key){	
 
 
@@ -198,7 +198,7 @@
 			}
 			return true;
 		}
-		//Сравнивает запросом с условиями
+		//РЎСЂР°РІРЅРёРІР°РµС‚ Р·Р°РїСЂРѕСЃРѕРј СЃ СѓСЃР»РѕРІРёСЏРјРё
 		static function multiMatch($query,$arr){
 			
 			if($query===null||$query===false||$query===''){
@@ -227,7 +227,7 @@
 			}
 			return false;
 		}
-		//Обертки
+		//РћР±РµСЂС‚РєРё
 		static function match($arr){
 			//echo 'hq::query='.hq::query();		
 			//echo '<br />';		
@@ -250,7 +250,7 @@
 				echo $res;
 			return $res;
 		}
-		//URL ДО URI
+		//URL Р”Рћ URI
 		static function baseURL() {
 			$res = 'http';
 			if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on")
@@ -277,14 +277,14 @@
 				return false;
 			$anyStart=false;
 
-			//Начинаеться ли с *
+			//РќР°С‡РёРЅР°РµС‚СЊСЃСЏ Р»Рё СЃ *
 			if($page[0]==='*'){
 				$anyStart=true;
 				$page[0]=' ';
 				$page=trim($page);
 			}
 			
-			//Заканчиваеться ли с *
+			//Р—Р°РєР°РЅС‡РёРІР°РµС‚СЊСЃСЏ Р»Рё СЃ *
 			$anyEnd=true;
 			if(substr($page,-1)==='*'){
 				$anyStart=true;
@@ -410,7 +410,7 @@
 			//print_r(array_values($res));
 			//echo "str=$str";
 
-			//return str_replace('Комнаты','Кондиционеры 2334',$str);
+			//return str_replace('РљРѕРјРЅР°С‚С‹','РљРѕРЅРґРёС†РёРѕРЅРµСЂС‹ 2334',$str);
 			
 			return str_replace(array_keys($res),array_values($res),$str);
 		}

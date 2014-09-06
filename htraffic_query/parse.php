@@ -1,11 +1,11 @@
 <?php
-	//Ôóíêöèè êàñàþùèåñÿ ïîäãîòîâêè êëþ÷åé è èõ ñðàâíåíèÿ ñ çàïðîñîì 
+	//Ð¤ÑƒÐ½ÐºÑ†Ð¸Ð¸ ÐºÐ°ÑÐ°ÑŽÑ‰Ð¸ÐµÑÑ Ð¿Ð¾Ð´Ð³Ð¾Ñ‚Ð¾Ð²ÐºÐ¸ ÐºÐ»ÑŽÑ‡ÐµÐ¹ Ð¸ Ð¸Ñ… ÑÑ€Ð°Ð²Ð½ÐµÐ½Ð¸Ñ Ñ Ð·Ð°Ð¿Ñ€Ð¾ÑÐ¾Ð¼ 
 
 	include_once(dirname(__FILE__).'/libs.php');
 	class HQ_PARSE extends HQ_LIBS {
 	
-		// Ãåíåðèðóåò âàðèàíòû îäíîãî òèïà ñèíòàêñèñà () èëè {}
-		// Âîçâðàùàåò ìàññèâ âàðèàíòîâ 
+		// Ð“ÐµÐ½ÐµÑ€Ð¸Ñ€ÑƒÐµÑ‚ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹ Ð¾Ð´Ð½Ð¾Ð³Ð¾ Ñ‚Ð¸Ð¿Ð° ÑÐ¸Ð½Ñ‚Ð°ÐºÑÐ¸ÑÐ° () Ð¸Ð»Ð¸ {}
+		// Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð¼Ð°ÑÑÐ¸Ð² Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ð¾Ð² 
 		static function simpleGen($str,$startSymb='(',$endSymb=')'){
 			$arr=explode($startSymb, $str,  2);
 			if(count($arr)===1){
@@ -25,8 +25,8 @@
 			return $res;
 		}
 		
-		// Ãåíåðèðóåò âàðèàíòû îáîèõ òèïîâ ñèíòàêñèñà () è {}
-		// Âîçâðàùàåò àññîöèàòèâíûé ìàññèâ
+		// Ð“ÐµÐ½ÐµÑ€Ð¸Ñ€ÑƒÐµÑ‚ Ð²Ð°Ñ€Ð¸Ð°Ð½Ñ‚Ñ‹ Ð¾Ð±Ð¾Ð¸Ñ… Ñ‚Ð¸Ð¿Ð¾Ð² ÑÐ¸Ð½Ñ‚Ð°ÐºÑÐ¸ÑÐ° () Ð¸ {}
+		// Ð’Ð¾Ð·Ð²Ñ€Ð°Ñ‰Ð°ÐµÑ‚ Ð°ÑÑÐ¾Ñ†Ð¸Ð°Ñ‚Ð¸Ð²Ð½Ñ‹Ð¹ Ð¼Ð°ÑÑÐ¸Ð²
 		static function fullGen($str){
 			static $cache=Array();
 			if(isset($cache[$str]))
@@ -45,12 +45,12 @@
 		}
 		
 		static function toLower($str){
-			//$str=str_replace(['¸','¨'],['å','Å'],$str);
+			//$str=str_replace(['Ñ‘','Ð'],['Ðµ','Ð•'],$str);
 			$str=mb_strtolower($str,'cp1251');
 			return $str;
 		}
 
-		// Ïðåïðîöåññèíã ñïèñêà êëþ÷åé
+		// ÐŸÑ€ÐµÐ¿Ñ€Ð¾Ñ†ÐµÑÑÐ¸Ð½Ð³ ÑÐ¿Ð¸ÑÐºÐ° ÐºÐ»ÑŽÑ‡ÐµÐ¹
 		static function prepare($arr){
 			if(!is_array($arr)){
 				if(is_string($arr))
@@ -101,7 +101,7 @@
 		}
 		static function dropSyntax($str){
 			static $cache=Array();
-			$str=str_replace(Array('¸','¨'),Array('å','Å'),$str);
+			$str=str_replace(Array('Ñ‘','Ð'),Array('Ðµ','Ð•'),$str);
 			if(isset($cache[$str]))
 				return $cache[$str];
 				
@@ -116,7 +116,7 @@
 			$cache[$str]=$res;
 			return $res;
 		}	
-		// Ïðîâåðêà íà ïëîõèå ñèìâîëû
+		// ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ð¿Ð»Ð¾Ñ…Ð¸Ðµ ÑÐ¸Ð¼Ð²Ð¾Ð»Ñ‹
 		static function checkKey($str){
 			static $cache=Array();
 			if(isset($cache[$str])||hq::$noCheck)
@@ -173,16 +173,16 @@
 			return !$encoding || strpos($encoding,'1251')!==false;
 		}
 		
-		//Êîíâåðòèðóåò êîäèðîâêó ââîäà âî âíóòðåíèþþ êîäèðîâêó (öï1251) 
+		//ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€ÑƒÐµÑ‚ ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÑƒ Ð²Ð²Ð¾Ð´Ð° Ð²Ð¾ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½Ð¸ÑŽÑŽ ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÑƒ (Ñ†Ð¿1251) 
 		static function fromEncoding($str){
 			return hq::isCp1251(hq::$encoding) ? $str : hq::Utf8_To_Cp1251($str);
 		}
-		//Êîíâåðòèðóåò âíóòðåíþþþ êîäèðîâêó âî âíåøíþþ
+		//ÐšÐ¾Ð½Ð²ÐµÑ€Ñ‚Ð¸Ñ€ÑƒÐµÑ‚ Ð²Ð½ÑƒÑ‚Ñ€ÐµÐ½ÑŽÑŽÑŽ ÐºÐ¾Ð´Ð¸Ñ€Ð¾Ð²ÐºÑƒ Ð²Ð¾ Ð²Ð½ÐµÑˆÐ½ÑŽÑŽ
 		static function toEncoding($str){
 			return hq::isCp1251(hq::$encoding) ? $str : hq::Cp1251_To_Utf8($str);
 		}
 		
-		//ïðåîáðàçóåò çàïðîñ â èíäåêñ ñëîâ
+		//Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·ÑƒÐµÑ‚ Ð·Ð°Ð¿Ñ€Ð¾Ñ Ð² Ð¸Ð½Ð´ÐµÐºÑ ÑÐ»Ð¾Ð²
 		static function parseQuery($str){
 			static $cache=Array();
 			$str=hq::toLower($str);
@@ -199,7 +199,7 @@
 			return $index;
 		}
 
-		//ïðåîáðàçóåò êëþ÷ â ñïèñîê ñëîâ ñ ìîðôîëîãèåé
+		//Ð¿Ñ€ÐµÐ¾Ð±Ñ€Ð°Ð·ÑƒÐµÑ‚ ÐºÐ»ÑŽÑ‡ Ð² ÑÐ¿Ð¸ÑÐ¾Ðº ÑÐ»Ð¾Ð² Ñ Ð¼Ð¾Ñ€Ñ„Ð¾Ð»Ð¾Ð³Ð¸ÐµÐ¹
 		static function parseKey($str){
 			static $cache=Array();
 			if(isset($cache[$str]))
